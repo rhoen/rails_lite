@@ -38,6 +38,7 @@ describe "the symphony of things" do
       allow(req).to receive(:path) { "/statuses/1" }
       allow(req).to receive(:request_method) { :get }
       route.run(req, res)
+
       expect(res.body).to eq("got #1")
     end
   end

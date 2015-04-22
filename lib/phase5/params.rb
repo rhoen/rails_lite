@@ -12,25 +12,13 @@ module Phase5
     attr_accessor :params
 
     def initialize(req, route_params = {})
-
       query_str = req.query_string.to_s
       body_str = req.body.to_s
-      # route_str = parse_route_params(route_params).to_s
-      @params = {}
-      parse_www_encoded_form(query_str + body_str)# + route_str)
-    end
-
-    def parse_route_params(route_params)
-      result = []
-      route_params.each do |key, value|
-        result << "#{key}=#{value}"
-      end
-
-      result.join('&')
+      @params = {}.merge!(route_params)
+      parse_www_encoded_form(query_str + body_str)
     end
 
     def [](key)
-      byebug
       params[key.to_s]
     end
 
