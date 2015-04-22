@@ -16,7 +16,7 @@ module Phase5
     end
 
     def [](key)
-      @params[key]
+      @params[key.to_s]
     end
 
     def to_s
@@ -32,18 +32,30 @@ module Phase5
     # should return
     # { "user" => { "address" => { "street" => "main", "zip" => "89436" } } }
     def parse_www_encoded_form(www_encoded_form)
-      @params = {}
       return if www_encoded_form.nil?
-
       query_pairs = URI::decode_www_form(www_encoded_form)
+
       query_pairs.each do |pair|
-        @params[pair[0]] = pair[1]
+        keys = parse_key(pair[0])
+        query_value = pair[1]
+        @params = nest_hashes(keys, query_value)
       end
+      first_nested_query = query_pairs[0][0]
+      split = first_nested_query.split(/\]\[|\[|\]/)
+
     end
 
     # this should return an array
     # user[address][street] should return ['user', 'address', 'street']
     def parse_key(key)
+      key.split(/\]\[|\[|\]/)
+    end
+
+    def nest_hashes(key_arr, val)
+      if key_arr.size == 1
+        return {key_arr[0] => val}
+      end
+      {key_arr[0] => nest_hashes(key_arr[1..-1], val)}
     end
   end
 end
