@@ -9,18 +9,21 @@ module Phase5
     #
     # You haven't done routing yet; but assume route params will be
     # passed in as a hash to `Params.new` as below:
+    attr_accessor :params
+
     def initialize(req, route_params = {})
       @req = req
       @route_params = route_params
+      @params = {}
       parse_www_encoded_form(@req.query_string)
     end
 
     def [](key)
-      @params[key.to_s]
+      params[key.to_s]
     end
 
     def to_s
-      @params.to_json.to_s
+      params.to_json.to_s
     end
 
     class AttributeNotFoundError < ArgumentError; end;
@@ -38,7 +41,11 @@ module Phase5
       query_pairs.each do |pair|
         keys = parse_key(pair[0])
         query_value = pair[1]
-        @params = nest_hashes(keys, query_value)
+        if keys.size == 1
+          params[keys[0]] = query_value
+          next
+        end
+        params[keys.shift] = nest_hashes(keys, query_value)
       end
       first_nested_query = query_pairs[0][0]
       split = first_nested_query.split(/\]\[|\[|\]/)
