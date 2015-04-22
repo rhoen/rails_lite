@@ -1,6 +1,6 @@
 require_relative '../phase4/controller_base'
 require_relative './params'
-
+require 'byebug'
 module Phase5
   class ControllerBase < Phase4::ControllerBase
     attr_reader :params
@@ -9,6 +9,7 @@ module Phase5
     def initialize(req, res, route_params = {})
       @req = req
       @res = res
+      byebug
     end
   end
 end
