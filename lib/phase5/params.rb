@@ -12,6 +12,7 @@ module Phase5
     attr_accessor :params
 
     def initialize(req, route_params = {})
+
       query_str = req.query_string.to_s
       body_str = req.body.to_s
       # route_str = parse_route_params(route_params).to_s
@@ -29,6 +30,7 @@ module Phase5
     end
 
     def [](key)
+      byebug
       params[key.to_s]
     end
 
